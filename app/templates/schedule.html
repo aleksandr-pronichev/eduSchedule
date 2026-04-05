@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Расписание - EduSchedule{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-calendar-week"></i> Расписание занятий</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form id="filterForm" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label for="filterGroup" class="form-label">Группа</label>
+                <select class="form-select" id="filterGroup" name="group_id">
+                    <option value="">-- Все группы --</option>
+                    {% for g in groups %}
+                    <option value="{{ g.id }}" {% if selected.group_id == g.id %}selected{% endif %}>{{ g.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="filterTeacher" class="form-label">Преподаватель</label>
+                <select class="form-select" id="filterTeacher" name="teacher_id">
+                    <option value="">-- Все --</option>
+                    {% for t in teachers %}
+                    <option value="{{ t.id }}" {% if selected.teacher_id == t.id %}selected{% endif %}>{{ t.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="filterRoom" class="form-label">Аудитория</label>
+                <select class="form-select" id="filterRoom" name="room_id">
+                    <option value="">-- Все --</option>
+                    {% for r in rooms %}
+                    <option value="{{ r.id }}" {% if selected.room_id == r.id %}selected{% endif %}>{{ r.number }}{% if r.building %}, {{ r.building }}{% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="button" id="btnFilter" class="btn btn-primary me-2">
+                    <i class="bi bi-funnel"></i> Показать
+                </button>
+                <button type="button" id="btnReset" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Сбросить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="schedule-legend mb-3">
+    <span class="badge bg-primary me-2">Лекция</span>
+    <span class="badge bg-success me-2">Практика</span>
+    <span class="badge bg-warning text-dark me-2">Лабораторная</span>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered schedule-table" id="scheduleTable">
+        <thead>
+            <tr>
+                <th class="time-col">Время</th>
+                {% for d_num, d_name in days.items() %}
+                <th class="day-col">{{ d_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody id="scheduleBody">
+            {% for slot_num, slot_time in time_slots.items() %}
+            <tr>
+                <td class="time-cell">
+                    <strong>{{ slot_num }} пара</strong><br>
+                    <small>{{ slot_time }}</small>
+                </td>
+                {% for d_num in days.keys() %}
+                <td class="lesson-cell" data-day="{{ d_num }}" data-slot="{{ slot_num }}">
+                    {% set key = (d_num, slot_num) %}
+                    {% if key in schedule_data %}
+                        {% for lesson in schedule_data[key] %}
+                        <div class="lesson-item lesson-{{ lesson.lesson_type|lower|replace('а', 'a')|replace(' ', '') }}
+                            {% if lesson.lesson_type == 'Лекция' %}lesson-lecture{% elif lesson.lesson_type == 'Практика' %}lesson-practice{% else %}lesson-lab{% endif %}">
+                            <strong>{{ lesson.subject.name }}</strong><br>
+                            <small>{{ lesson.teacher.full_name }}</small><br>
+                            <small>{{ lesson.group.name }} | ауд. {{ lesson.room.number }}</small>
+                            {% if lesson.week_type != 'Каждая' %}
+                            <br><small class="text-muted">({{ lesson.week_type }} нед.)</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div id="noData" class="text-center text-muted py-4" style="display: none;">
+    <i class="bi bi-calendar-x" style="font-size: 3rem;"></i>
+    <p class="mt-2">Занятия не найдены. Попробуйте изменить параметры фильтрации.</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var btnFilter = document.getElementById('btnFilter');
+    var btnReset = document.getElementById('btnReset');
+    var filterGroup = document.getElementById('filterGroup');
+    var filterTeacher = document.getElementById('filterTeacher');
+    var filterRoom = document.getElementById('filterRoom');
+
+    btnFilter.addEventListener('click', function() {
+        loadSchedule();
+    });
+
+    btnReset.addEventListener('click', function() {
+        filterGroup.value = '';
+        filterTeacher.value = '';
+        filterRoom.value = '';
+        loadSchedule();
+    });
+
+    function loadSchedule() {
+        var params = new URLSearchParams();
+        if (filterGroup.value) params.append('group_id', filterGroup.value);
+        if (filterTeacher.value) params.append('teacher_id', filterTeacher.value);
+        if (filterRoom.value) params.append('room_id', filterRoom.value);
+
+        fetch('/api/schedule?' + params.toString())
+            .then(function(resp) { return resp.json(); })
+            .then(function(data) {
+                updateTable(data);
+            });
+    }
+
+    function getLessonClass(type) {
+        if (type === 'Лекция') return 'lesson-lecture';
+        if (type === 'Практика') return 'lesson-practice';
+        return 'lesson-lab';
+    }
+
+    function updateTable(lessons) {
+        var cells = document.querySelectorAll('.lesson-cell');
+        cells.forEach(function(cell) { cell.innerHTML = ''; });
+
+        var noData = document.getElementById('noData');
+        var table = document.getElementById('scheduleTable');
+
+        if (lessons.length === 0) {
+            noData.style.display = 'block';
+            table.style.display = 'none';
+            return;
+        }
+
+        noData.style.display = 'none';
+        table.style.display = '';
+
+        lessons.forEach(function(l) {
+            var cell = document.querySelector(
+                '.lesson-cell[data-day="' + l.day_of_week + '"][data-slot="' + l.time_slot + '"]'
+            );
+            if (cell) {
+                var div = document.createElement('div');
+                div.className = 'lesson-item ' + getLessonClass(l.lesson_type);
+                var html = '<strong>' + l.subject + '</strong><br>';
+                html += '<small>' + l.teacher + '</small><br>';
+                html += '<small>' + l.group + ' | ауд. ' + l.room + '</small>';
+                if (l.week_type !== 'Каждая') {
+                    html += '<br><small class="text-muted">(' + l.week_type + ' нед.)</small>';
+                }
+                div.innerHTML = html;
+                cell.appendChild(div);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

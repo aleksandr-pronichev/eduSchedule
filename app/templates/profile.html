@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Профиль - EduSchedule{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header"><h5>Профиль пользователя</h5></div>
+            <div class="card-body">
+                <p><strong>ФИО:</strong> {{ current_user.full_name }}</p>
+                <p><strong>Логин:</strong> {{ current_user.username }}</p>
+                <p><strong>Email:</strong> {{ current_user.email }}</p>
+                <p><strong>Роль:</strong>
+                    {% if current_user.role == 'admin' %}Администратор
+                    {% elif current_user.role == 'teacher' %}Преподаватель
+                    {% else %}Студент{% endif %}
+                </p>
+                {% if current_user.group %}
+                <p><strong>Группа:</strong> {{ current_user.group.name }}</p>
+                <a href="{{ url_for('schedule', group_id=current_user.group_id) }}" class="btn btn-primary btn-sm">
+                    Моё расписание
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        {% if user_lessons %}
+        <div class="card">
+            <div class="card-header"><h5>Мои занятия на неделю</h5></div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>День</th>
+                            <th>Время</th>
+                            <th>Дисциплина</th>
+                            <th>Преподаватель</th>
+                            <th>Аудитория</th>
+                            <th>Тип</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for l in user_lessons %}
+                        <tr>
+                            <td>{{ days[l.day_of_week] }}</td>
+                            <td>{{ time_slots[l.time_slot] }}</td>
+                            <td>{{ l.subject.name }}</td>
+                            <td>{{ l.teacher.full_name }}</td>
+                            <td>{{ l.room.number }}</td>
+                            <td>{{ l.lesson_type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            {% if current_user.group %}
+            У вашей группы пока нет занятий в расписании.
+            {% else %}
+            Выберите группу в профиле для отображения расписания.
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

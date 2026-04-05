@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Занятия - EduSchedule{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Управление занятиями</h3>
+    <a href="{{ url_for('admin_lesson_add') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Добавить занятие
+    </a>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Дисциплина</th>
+                <th>Преподаватель</th>
+                <th>Группа</th>
+                <th>Аудитория</th>
+                <th>День</th>
+                <th>Время</th>
+                <th>Тип</th>
+                <th>Неделя</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for l in lessons %}
+            <tr>
+                <td>{{ l.id }}</td>
+                <td>{{ l.subject.name }}</td>
+                <td>{{ l.teacher.full_name }}</td>
+                <td>{{ l.group.name }}</td>
+                <td>{{ l.room.number }}</td>
+                <td>{{ days[l.day_of_week] }}</td>
+                <td>{{ time_slots[l.time_slot] }}</td>
+                <td>{{ l.lesson_type }}</td>
+                <td>{{ l.week_type }}</td>
+                <td>
+                    <a href="{{ url_for('admin_lesson_edit', id=l.id) }}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="POST" action="{{ url_for('admin_lesson_delete', id=l.id) }}" class="d-inline"
+                          onsubmit="return confirm('Удалить занятие?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Назад</a>
+{% endblock %}

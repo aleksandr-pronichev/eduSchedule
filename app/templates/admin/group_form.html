@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{% if group %}Редактирование группы{% else %}Добавление группы{% endif %} - EduSchedule{% endblock %}
+{% block content %}
+<h3>{% if group %}Редактирование группы{% else %}Добавление группы{% endif %}</h3>
+<div class="row">
+    <div class="col-md-6">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">Название группы</label>
+                <input type="text" class="form-control" id="name" name="name"
+                       value="{{ group.name if group else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="course" class="form-label">Курс</label>
+                <select class="form-select" id="course" name="course" required>
+                    {% for c in range(1, 7) %}
+                    <option value="{{ c }}" {% if group and group.course == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="faculty" class="form-label">Факультет</label>
+                <input type="text" class="form-control" id="faculty" name="faculty"
+                       value="{{ group.faculty if group else '' }}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <a href="{{ url_for('admin_groups') }}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

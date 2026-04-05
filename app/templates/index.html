@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}EduSchedule - Главная{% endblock %}
+{% block content %}
+<div class="hero-section text-center py-5">
+    <h1 class="display-5 mb-3">Интерактивное расписание</h1>
+    <p class="lead text-muted mb-4">
+        Веб-платформа для управления расписанием занятий в образовательном учреждении.
+        Удобный просмотр, фильтрация и управление учебным расписанием.
+    </p>
+    <a href="{{ url_for('schedule') }}" class="btn btn-primary btn-lg">
+        <i class="bi bi-calendar-week"></i> Перейти к расписанию
+    </a>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center h-100 stat-card">
+            <div class="card-body">
+                <i class="bi bi-people stat-icon" style="color: #3b82f6;"></i>
+                <h3 class="mt-2">{{ stats.groups }}</h3>
+                <p class="text-muted">Учебных групп</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center h-100 stat-card">
+            <div class="card-body">
+                <i class="bi bi-person-workspace stat-icon" style="color: #10b981;"></i>
+                <h3 class="mt-2">{{ stats.teachers }}</h3>
+                <p class="text-muted">Преподавателей</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center h-100 stat-card">
+            <div class="card-body">
+                <i class="bi bi-book stat-icon" style="color: #f59e0b;"></i>
+                <h3 class="mt-2">{{ stats.subjects }}</h3>
+                <p class="text-muted">Дисциплин</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5><i class="bi bi-search"></i> Быстрый поиск</h5>
+                <p class="text-muted">Найдите расписание по группе, преподавателю или аудитории с помощью интерактивных фильтров.</p>
+                <a href="{{ url_for('schedule') }}" class="btn btn-outline-primary">Открыть расписание</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5><i class="bi bi-clock-history"></i> Актуальные данные</h5>
+                <p class="text-muted">Расписание обновляется в реальном времени. Всего в системе {{ stats.lessons }} занятий.</p>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-outline-success">Зарегистрироваться</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

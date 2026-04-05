@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{% if teacher %}Редактирование преподавателя{% else %}Добавление преподавателя{% endif %} - EduSchedule{% endblock %}
+{% block content %}
+<h3>{% if teacher %}Редактирование преподавателя{% else %}Добавление преподавателя{% endif %}</h3>
+<div class="row">
+    <div class="col-md-6">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="full_name" class="form-label">ФИО</label>
+                <input type="text" class="form-control" id="full_name" name="full_name"
+                       value="{{ teacher.full_name if teacher else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="department" class="form-label">Кафедра</label>
+                <input type="text" class="form-control" id="department" name="department"
+                       value="{{ teacher.department if teacher else '' }}">
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <a href="{{ url_for('admin_teachers') }}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

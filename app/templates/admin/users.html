@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Пользователи - EduSchedule{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Пользователи системы</h3>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Логин</th>
+            <th>ФИО</th>
+            <th>Email</th>
+            <th>Роль</th>
+            <th>Группа</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.full_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>
+                {% if u.role == 'admin' %}Администратор
+                {% elif u.role == 'teacher' %}Преподаватель
+                {% else %}Студент{% endif %}
+            </td>
+            <td>{{ u.group.name if u.group else '—' }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin_user_role', id=u.id) }}" class="d-inline">
+                    <select name="role" class="form-select form-select-sm d-inline-block" style="width: auto;"
+                            onchange="this.form.submit()">
+                        <option value="student" {% if u.role == 'student' %}selected{% endif %}>Студент</option>
+                        <option value="teacher" {% if u.role == 'teacher' %}selected{% endif %}>Преподаватель</option>
+                        <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Администратор</option>
+                    </select>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Назад</a>
+{% endblock %}

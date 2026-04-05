@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{% if lesson %}Редактирование занятия{% else %}Добавление занятия{% endif %} - EduSchedule{% endblock %}
+{% block content %}
+<h3>{% if lesson %}Редактирование занятия{% else %}Добавление занятия{% endif %}</h3>
+<div class="row">
+    <div class="col-md-8">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="subject_id" class="form-label">Дисциплина</label>
+                    <select class="form-select" id="subject_id" name="subject_id" required>
+                        <option value="">-- Выберите --</option>
+                        {% for s in subjects %}
+                        <option value="{{ s.id }}" {% if lesson and lesson.subject_id == s.id %}selected{% endif %}>{{ s.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="teacher_id" class="form-label">Преподаватель</label>
+                    <select class="form-select" id="teacher_id" name="teacher_id" required>
+                        <option value="">-- Выберите --</option>
+                        {% for t in teachers %}
+                        <option value="{{ t.id }}" {% if lesson and lesson.teacher_id == t.id %}selected{% endif %}>{{ t.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="group_id" class="form-label">Группа</label>
+                    <select class="form-select" id="group_id" name="group_id" required>
+                        <option value="">-- Выберите --</option>
+                        {% for g in groups %}
+                        <option value="{{ g.id }}" {% if lesson and lesson.group_id == g.id %}selected{% endif %}>{{ g.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="room_id" class="form-label">Аудитория</label>
+                    <select class="form-select" id="room_id" name="room_id" required>
+                        <option value="">-- Выберите --</option>
+                        {% for r in rooms %}
+                        <option value="{{ r.id }}" {% if lesson and lesson.room_id == r.id %}selected{% endif %}>{{ r.number }}{% if r.building %} ({{ r.building }}){% endif %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="day_of_week" class="form-label">День недели</label>
+                    <select class="form-select" id="day_of_week" name="day_of_week" required>
+                        {% for d_num, d_name in days.items() %}
+                        <option value="{{ d_num }}" {% if lesson and lesson.day_of_week == d_num %}selected{% endif %}>{{ d_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="time_slot" class="form-label">Пара</label>
+                    <select class="form-select" id="time_slot" name="time_slot" required>
+                        {% for s_num, s_time in time_slots.items() %}
+                        <option value="{{ s_num }}" {% if lesson and lesson.time_slot == s_num %}selected{% endif %}>{{ s_num }} ({{ s_time }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="lesson_type" class="form-label">Тип занятия</label>
+                    <select class="form-select" id="lesson_type" name="lesson_type" required>
+                        {% for lt in lesson_types %}
+                        <option value="{{ lt }}" {% if lesson and lesson.lesson_type == lt %}selected{% endif %}>{{ lt }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="week_type" class="form-label">Неделя</label>
+                    <select class="form-select" id="week_type" name="week_type">
+                        {% for wt in week_types %}
+                        <option value="{{ wt }}" {% if lesson and lesson.week_type == wt %}selected{% endif %}>{{ wt }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <a href="{{ url_for('admin_lessons') }}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

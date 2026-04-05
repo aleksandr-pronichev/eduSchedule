@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{% if room %}Редактирование аудитории{% else %}Добавление аудитории{% endif %} - EduSchedule{% endblock %}
+{% block content %}
+<h3>{% if room %}Редактирование аудитории{% else %}Добавление аудитории{% endif %}</h3>
+<div class="row">
+    <div class="col-md-6">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="number" class="form-label">Номер аудитории</label>
+                <input type="text" class="form-control" id="number" name="number"
+                       value="{{ room.number if room else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="building" class="form-label">Корпус</label>
+                <input type="text" class="form-control" id="building" name="building"
+                       value="{{ room.building if room else '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="capacity" class="form-label">Вместимость</label>
+                <input type="number" class="form-control" id="capacity" name="capacity"
+                       value="{{ room.capacity if room else 30 }}" min="1">
+            </div>
+            <div class="mb-3">
+                <label for="room_type" class="form-label">Тип</label>
+                <select class="form-select" id="room_type" name="room_type">
+                    {% for rt in ['Лекционная', 'Практическая', 'Лаборатория', 'Компьютерный класс'] %}
+                    <option value="{{ rt }}" {% if room and room.room_type == rt %}selected{% endif %}>{{ rt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <a href="{{ url_for('admin_rooms') }}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

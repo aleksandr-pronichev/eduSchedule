@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Панель управления - EduSchedule{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-gear"></i> Панель управления</h2>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-people" style="font-size: 2rem; color: #3b82f6;"></i>
+                <h4 class="mt-2">{{ stats.groups }}</h4>
+                <p class="text-muted">Группы</p>
+                <a href="{{ url_for('admin_groups') }}" class="btn btn-outline-primary btn-sm">Управление</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-book" style="font-size: 2rem; color: #10b981;"></i>
+                <h4 class="mt-2">{{ stats.subjects }}</h4>
+                <p class="text-muted">Дисциплины</p>
+                <a href="{{ url_for('admin_subjects') }}" class="btn btn-outline-success btn-sm">Управление</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-person-workspace" style="font-size: 2rem; color: #f59e0b;"></i>
+                <h4 class="mt-2">{{ stats.teachers }}</h4>
+                <p class="text-muted">Преподаватели</p>
+                <a href="{{ url_for('admin_teachers') }}" class="btn btn-outline-warning btn-sm">Управление</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-building" style="font-size: 2rem; color: #ef4444;"></i>
+                <h4 class="mt-2">{{ stats.rooms }}</h4>
+                <p class="text-muted">Аудитории</p>
+                <a href="{{ url_for('admin_rooms') }}" class="btn btn-outline-danger btn-sm">Управление</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-calendar-check" style="font-size: 2rem; color: #8b5cf6;"></i>
+                <h4 class="mt-2">{{ stats.lessons }}</h4>
+                <p class="text-muted">Занятия</p>
+                <a href="{{ url_for('admin_lessons') }}" class="btn btn-outline-secondary btn-sm">Управление</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-person" style="font-size: 2rem; color: #06b6d4;"></i>
+                <h4 class="mt-2">{{ stats.users }}</h4>
+                <p class="text-muted">Пользователи</p>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-outline-info btn-sm">Просмотр</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

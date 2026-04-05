@@ -1,0 +1,25 @@
+# EduSchedule
+
+Веб-платформа для управления расписанием занятий.
+
+## Запуск
+
+```
+pip install flask flask-sqlalchemy flask-login
+python seed.py
+python run.py
+```
+
+Приложение будет доступно по адресу http://127.0.0.1:5000
+
+## Учётные данные
+
+| Роль         | Логин    | Пароль     |
+|--------------|----------|------------|
+| Администратор| admin    | admin123   |
+| Студент      | student1 | student123 |
+| Студент      | student2 | student123 |
+
+## Стек
+
+Python 3.9+ / Flask / SQLite / Bootstrap 5

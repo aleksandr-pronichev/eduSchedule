@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{% if subject %}Редактирование дисциплины{% else %}Добавление дисциплины{% endif %} - EduSchedule{% endblock %}
+{% block content %}
+<h3>{% if subject %}Редактирование дисциплины{% else %}Добавление дисциплины{% endif %}</h3>
+<div class="row">
+    <div class="col-md-6">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">Название дисциплины</label>
+                <input type="text" class="form-control" id="name" name="name"
+                       value="{{ subject.name if subject else '' }}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <a href="{{ url_for('admin_subjects') }}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
