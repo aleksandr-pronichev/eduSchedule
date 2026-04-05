@@ -2,10 +2,13 @@
 
 Веб-платформа для управления расписанием занятий.
 
-## 🎬 Видео
+## 🎬 Демонстрация работы системы
 
-- Интерфейс: [https://disk.yandex.ru/...](https://drive.google.com/file/d/1ZG2mbrUVKcPGQ-y4JIXnwNORrGsdkEHs/view?usp=sharing)
-- Функционал: [https://disk.yandex.ru/...](https://drive.google.com/file/d/1He5TzxqpjeEXl0C0K0Hichb6l8RmgyHf/view?usp=sharing)
+### 🎥 Интерфейс
+[Смотреть видео](https://drive.google.com/file/d/1ZG2mbrUVKcPGQ-y4JIXnwNORrGsdkEHs/view?usp=sharing)
+
+### ⚙️ Функционал
+[Смотреть видео](https://drive.google.com/file/d/1He5TzxqpjqEXIOC0K0Hichb6I8RmgyHf/view?usp=sharing)
 
 ## Запуск
 
